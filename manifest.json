@@ -1,0 +1,24 @@
+{
+  "name": "Uma Musume Reference",
+  "short_name": "Uma Ref",
+  "description": "Uma Musume Global — reviews, ratings and leveling guide",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d0f1a",
+  "theme_color": "#f472b6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uma Musume – Global Reference</title>
+<meta name="theme-color" content="#f472b6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Uma Ref">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0d0f1a;color:#e8eaf4;min-height:100vh;font-size:14px;line-height:1.5}
+header{position:sticky;top:0;z-index:100;background:#0d0f1a;border-bottom:1px solid #1e2238;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.site-title{font-size:1rem;font-weight:700;color:#f472b6;white-space:nowrap}
+.tabs{display:flex;gap:3px;background:#141728;border-radius:8px;padding:3px}
+.tab{background:none;border:none;color:#8892b0;padding:6px 14px;border-radius:6px;font-size:.8rem;cursor:pointer;transition:.15s;font-family:inherit}
+.tab.active{background:#f472b6;color:#fff}
+.tab:hover:not(.active){background:#1e2238;color:#e8eaf4}
+main{max-width:900px;margin:0 auto;padding:16px}
+.panel{display:none}
+.panel.active{display:block}
+.legend{background:#141728;border:1px solid #1e2238;border-radius:10px;padding:14px;margin-bottom:16px;font-size:.82rem;color:#8892b0}
+.legend strong{color:#e8eaf4}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rb{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.rb.s1{background:rgba(107,114,128,.2);color:#9ca3af}
+.rb.s2{background:rgba(217,119,6,.2);color:#fbbf24}
+.rb.s3{background:rgba(202,138,4,.2);color:#eab308}
+.rb.s4{background:rgba(22,163,74,.2);color:#4ade80}
+.rb.s5{background:rgba(124,58,237,.2);color:#c4b5fd}
+.rb.r1{background:rgba(156,163,175,.15);color:#9ca3af}
+.rb.r2{background:rgba(251,191,36,.15);color:#fbbf24}
+.rb.r3{background:rgba(167,139,250,.15);color:#a78bfa}
+.rb.rcurr{background:rgba(244,114,182,.15);color:#f472b6}
+.rb.rdeb{background:rgba(239,68,68,.15);color:#f87171}
+.section-title{font-size:.95rem;font-weight:700;padding:7px 14px;border-radius:8px;margin:20px 0 10px;border-left:3px solid}
+.section-title.r1{background:rgba(156,163,175,.08);border-color:#9ca3af;color:#9ca3af}
+.section-title.r2{background:rgba(251,191,36,.06);border-color:#fbbf24;color:#fbbf24}
+.section-title.r3{background:rgba(167,139,250,.08);border-color:#a78bfa;color:#a78bfa}
+.section-title.rcurr{background:rgba(244,114,182,.08);border-color:#f472b6;color:#f472b6}
+.card{background:#141728;border:1px solid #1e2238;border-radius:10px;margin-bottom:8px;overflow:hidden}
+.card-head{padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
+.card-head:hover{background:#1a1e30}
+.card-name-area{flex:1;min-width:0}
+.card-name{font-weight:600;font-size:.95rem;line-height:1.3}
+.card-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chevron{color:#8892b0;font-size:.8rem;margin-top:3px;transition:transform .2s;user-select:none;flex-shrink:0}
+.card.open .chevron{transform:rotate(180deg)}
+.card-body{display:none;padding:12px 14px;border-top:1px solid #1e2238}
+.card.open .card-body{display:block}
+.desc{font-size:.85rem;color:#c0c8e0;line-height:1.7}
+.desc p{margin-bottom:8px}
+.desc p:last-child{margin-bottom:0}
+.lt-wrap{overflow-x:auto;border-radius:10px;border:1px solid #1e2238}
+table.lt{width:100%;border-collapse:collapse;font-size:.8rem;background:#141728}
+table.lt th{background:#0d0f1a;padding:9px 12px;text-align:center;font-weight:600;color:#8892b0;white-space:nowrap;border-bottom:1px solid #1e2238}
+table.lt th:first-child{text-align:left}
+table.lt td{padding:8px 12px;border-bottom:1px solid #1e2238;vertical-align:middle}
+table.lt td:not(:first-child){text-align:center}
+table.lt tr:last-child td{border-bottom:none}
+table.lt tr:hover td{background:#1a1e30}
+.lv{display:inline-block;padding:3px 9px;border-radius:4px;font-weight:700;font-size:.76rem}
+.lv.s1{background:rgba(107,114,128,.2);color:#9ca3af}
+.lv.s2{background:rgba(217,119,6,.2);color:#fbbf24}
+.lv.s3{background:rgba(202,138,4,.2);color:#eab308}
+.lv.s4{background:rgba(22,163,74,.2);color:#4ade80}
+.lv.s5{background:rgba(124,58,237,.2);color:#c4b5fd}
+.uma-sub{font-size:.73rem;color:#8892b0;margin-top:2px}
+.card[data-state="have"]{border-color:#166534;box-shadow:inset 3px 0 0 #4ade80}
+.card[data-state="want"]{border-color:#92400e;box-shadow:inset 3px 0 0 #fbbf24}
+.coll-btns{display:flex;gap:5px;margin-top:7px}
+.cbtn{background:none;border:1px solid #1e2238;border-radius:5px;color:#6b7280;padding:3px 10px;font-size:.72rem;cursor:pointer;font-family:inherit;transition:.15s}
+.cbtn:hover{border-color:#4b5563;color:#e8eaf4}
+.cbtn.have.active{background:rgba(22,163,74,.2);border-color:#166534;color:#4ade80}
+.cbtn.want.active{background:rgba(217,119,6,.2);border-color:#92400e;color:#fbbf24}
+.cf-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.cf-label{font-size:.78rem;color:#8892b0}
+.cfbtn{background:#141728;border:1px solid #1e2238;border-radius:6px;color:#8892b0;padding:5px 14px;font-size:.78rem;cursor:pointer;font-family:inherit;transition:.15s}
+.cfbtn:hover{border-color:#4b5563;color:#e8eaf4}
+.cfbtn.active{background:#f472b6;border-color:#f472b6;color:#fff}
+.cfbtn[data-filter="have"].active{background:rgba(22,163,74,.2);border-color:#4ade80;color:#4ade80}
+.cfbtn[data-filter="want"].active{background:rgba(217,119,6,.2);border-color:#fbbf24;color:#fbbf24}
+</style>
+</head>
+<body>
+<header>
+  <span class="site-title">🐴 Uma Musume – Reference</span>
+  <div class="tabs">
+    <button class="tab active" onclick="setTab(this,'reviews')">Uma Reviews</button>
+    <button class="tab" onclick="setTab(this,'leveling')">Worth Leveling</button>
+  </div>
+</header>
+<main>
+  <div id="reviews" class="panel active">
+    <div class="legend">
+      <strong>Rating Scale</strong> — rated 1–5 for each role. Front Runners benchmarked vs Summer Maruzensky; all other styles vs OG Oguri Cap. Use CTRL+F / browser search to find an uma quickly.
+      <div class="legend-grid">
+        <div>
+          <div class="legend-item"><span class="rb s1">1</span> Skip — character love only</div>
+          <div class="legend-item"><span class="rb s2">2</span> Usable but outclassed</div>
+          <div class="legend-item"><span class="rb s3">3</span> Average (Oguri-tier)</div>
+          <div class="legend-item"><span class="rb s4">4</span> Strong on certain tracks</div>
+          <div class="legend-item"><span class="rb s5">5</span> Meta — top 5 on a track</div>
+        </div>
+        <div>
+          <div class="legend-item"><span class="rb r1">1★</span> 1-star uma</div>
+          <div class="legend-item"><span class="rb r2">2★</span> 2-star uma</div>
+          <div class="legend-item"><span class="rb r3">3★</span> 3-star uma</div>
+          <div class="legend-item"><span class="rb rcurr">New</span> Current/recent banner</div>
+          <div class="legend-item"><span class="rb rdeb">Debuffer</span> Debuff role</div>
+        </div>
+      </div>
+    </div>
+    <div class="cf-row">
+      <span class="cf-label">Show:</span>
+      <button class="cfbtn active" data-filter="all" onclick="setCollFilter(this,'all')">All</button>
+      <button class="cfbtn" data-filter="have" onclick="setCollFilter(this,'have')">✓ Have</button>
+      <button class="cfbtn" data-filter="want" onclick="setCollFilter(this,'want')">★ Want</button>
+    </div>
+    <div style="margin-bottom:12px">
+      <input id="umaSearch" type="search" placeholder='Search by name, or try "Parent 5", "Team Trials 4", "Pace Chaser 5"...' oninput="filterUmas()" style="width:100%;background:#141728;border:1px solid #1e2238;border-radius:8px;padding:9px 13px;color:#e8eaf4;font-size:.85rem;font-family:inherit;outline:none;transition:.15s" onfocus="this.style.borderColor='#f472b6'" onblur="this.style.borderColor='#1e2238'">
+    </div>
+    <div id="noResults" style="display:none;color:#8892b0;font-size:.85rem;padding:24px;text-align:center;background:#141728;border-radius:10px;border:1px solid #1e2238">No umas match your search.</div>
+    <div id="umaList"></div>
+  </div>
+  <div id="leveling" class="panel">
+    <div class="legend" style="margin-bottom:16px">
+      <strong>Awakening rating</strong> — rated per awakening level for Stadium/Team Trials use on the uma's primary style.<br>
+      <strong style="color:#9ca3af">1</strong> = bad &nbsp;·&nbsp; <strong style="color:#fbbf24">2</strong> = off-style only &nbsp;·&nbsp; <strong style="color:#eab308">3</strong> = inconsistent &nbsp;·&nbsp; <strong style="color:#4ade80">4</strong> = consistent &nbsp;·&nbsp; <strong style="color:#c4b5fd">5</strong> = very good, prioritise
+    </div>
+    <div class="lt-wrap"><table class="lt" id="lvTable"></table></div>
+  </div>
+</main>
+<script>
+const UMAS=[
+{stars:1,name:"Sakura Bakushin O",variant:null,
+rb:[{l:"Pace Chaser",s:4,n:"Sprint"},{l:"Team Trials",s:4,n:"Sprint"},{l:"Parent",s:2}],
+desc:"Bakushin's Staggering Lead gold is pretty much impossible to activate as a normal Front Runner, so you don't have to awaken her all the way to potential lv5. Since she has Pace Chaser Straightaways and Countermeasure, it's better to just make her a Pace Chaser. Her unique skill is also more difficult to activate as a Front Runner. Turbo Sprint is a great skill for Sprints, though other umas can get the gold from her card."},
+
+{stars:1,name:"Mejiro Ryan",variant:null,
+rb:[{l:"Late Surger",s:2},{l:"Team Trials",s:2},{l:"Parent",s:5}],
+desc:"Ryan is exclusively used as a parent. On tracks where the spurt starts on a corner, she's almost always used for all Late Surgers and End Closers. Even though Dober outshines her on some tracks, with two uniques to inherit, it's usually Ryan + Dober as your parents. Killer Tunes is for Pace Chasers/Front Runners, so it's not something that helps her. You'd rather run her as a Late Surger for Rising Dragon and the chance of triggering her unique. Though, her unique is way too specific to be consistent in Team Trials (need exactly 8th place)."},
+
+{stars:1,name:"Agnes Tachyon",variant:null,
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:5,n:"Medium"},{l:"Parent",s:5},{l:"Speed Debuffer",s:0,n:"-0.25"}],
+desc:"Tachyon isn't used universally as a parent, but on some tracks, her unique is used by Christmas Oguri as a fourth heal, which improves her consistency. For Team Trials, her debuff evolves into a perfectly consistent skill, but before that it doesn't fit with her Pace Chaser role. Her heal and unique are both consistent enough. Having a unique heal and a gold heal means you get to skimp on Stamina while training her. However, she's not amazing in a CM context, her best track being Kyoto 2200m."},
+
+{stars:1,name:"Nice Nature",variant:null,
+rb:[{l:"Late Surger",s:1},{l:"Team Trials",s:4},{l:"Parent",s:2},{l:"Stamina Debuffer",s:0,n:"-6%"}],
+desc:"Nice Nature is the quintessential Stamina Debuffer, having both important golds. That's basically her only use in Champions Meeting. See the Debuff Builds section for details. Her evolution skills are both bad, but the All-Seeing Eyes evolution is more consistent for Team Trials. Never gets used as an actual CM racer, even after the evolutions update."},
+
+{stars:1,name:"King Halo",variant:null,
+rb:[{l:"Late Surger",s:2},{l:"Team Trials",s:2},{l:"Parent",s:1}],
+desc:"OG King Halo is an unfortunate uma. Her unique is essentially OG Oguri's but worse. Her vision gold is consistent but unusable outside of Team Trials. Blinding Flash is inconsistent and weak when Turbo Sprint exists. An uma that's entirely outclassed. But, might be your only option in early Sprint CMs."},
+
+{stars:1,name:"Winning Ticket",variant:null,
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:3},{l:"Parent",s:1}],
+desc:'Winning Ticket has nothing exciting in her kit. A speed unique on the final straight combined with one useless and one decent gold. At least the golds are consistent. Her unique might be more consistent in Mile, but she starts with Mile F. "blocked_side" final corner uniques are difficult ever since First Anniversary added the spreading on final corner. She\'s fine, but there are many better umas.'},
+
+{stars:1,name:"Matikanefukukitaru",variant:null,
+rb:[{l:"Late Surger",s:1},{l:"Team Trials",s:4,n:"Long"},{l:"Parent",s:1}],
+desc:"Fuku's unique is more consistent in longer tracks. However, she has no built-in gold heals, so it's harder to build her for them. Her long gold is consistent but her green gold is anything but. In CM, it triggers 1/9 times, and in Team Trials, it triggers 1/12 times."},
+
+{stars:1,name:"Haru Urara",variant:null,
+rb:[{l:"Late Surger",s:1},{l:"Team Trials",s:4,n:"Dirt"},{l:"Parent",s:2}],
+desc:"Urara is full of recoveries. Since Dirt Team Trials is all Mile, and she has Medium G anyway, they're not very useful. However, they are fairly consistent, and for free-to-play players, she's one of the only options for Dirt Team Trials. You can make her an End Closer if you want her unique to be a bit more consistent, maybe. Her unique isn't normally something you want to inherit, however, there are some edge cases where you can inherit it on a Late Surger/End Closer Christmas Oguri. She's also sometimes used for weird strategies that involve having one very bad uma due to her bad aptitudes."},
+
+{stars:2,name:"Gold Ship",variant:null,
+rb:[{l:"End Closer",s:4},{l:"Team Trials",s:4,n:"Med/Long"},{l:"Parent",s:1}],
+desc:"Gold Ship is a good baseline End Closer. When End Closers are good, she's a fine option to bring, but she'll always be outclassed by at least one other End Closer. Early on, that's Narita Taishin. Her vision buff is a consistent gold for Team Trials but does nothing in CM, as always with vision skills. Downhills for her recovery happen more in Medium Team Trials (68%) than in 2500-2600 Long Team Trials (57%)."},
+
+{stars:2,name:"Vodka",variant:null,
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:4,n:"Mile"},{l:"Parent",s:1}],
+desc:"In CM, Vodka's Furious Feat evolution makes her a good gambler. If it triggers well she'll have a good chance to win. Pair it with other gambling skills like On Your Left!. In Team Trials, the 6 NPCs make it very hard to trigger. Her heal is consistent in both cases, though it can trigger too late before the buff. Her unique is a worse version of OG Oguri's."},
+
+{stars:2,name:"Daiwa Scarlet",variant:null,
+rb:[{l:"Front Runner",s:4},{l:"Pace Chaser",s:4},{l:"Team Trials",s:4,n:"Med Front"},{l:"Parent",s:1}],
+desc:'Daiwa\'s unique has accel on it, which is always a sign that you should look to see if you can take advantage of it. Early on in the JP server, she used to be known as the "Daiwa Rocket" in Medium. She triggers Killer Tunes, gains speed, and that triggers her unique, which makes her accel, ideally near the start of the spurt. If it\'s a bad track for Front Runners, she can be a Pace Chaser. She\'s a great F2P option in Medium CMs. For Team Trials, her unique is much more consistent as a Front Runner, so just make her a Front Runner and ignore her heal.'},
+
+{stars:2,name:"Grass Wonder",variant:null,
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:4,n:"Medium"},{l:"Parent",s:2},{l:"Speed Debuffer",s:0,n:"-0.25"}],
+desc:"Grass Wonder is generally used as a combination Speed Debuffer and Gambler in CM. With her built-in On Your Left!, she can sometimes get lucky and steal a win. On the races she doesn't get lucky, Monopolizer slows down the enemies to help your other umas win. In Team Trials, On Your Left! can be a bit inconsistent, but her Monopolizer evolution is perfectly consistent."},
+
+{stars:2,name:"El Condor Pasa",variant:null,
+rb:[{l:"Front Runner",s:4},{l:"Pace Chaser",s:4},{l:"Team Trials",s:4,n:"Dirt"},{l:"Parent",s:5}],
+desc:"Pasa is a really weird uma. Her unique is great for CM Front Runners when the spurt starts on or near the final straight. However, she has Front Runner E, so it's really difficult to raise her for that herself. She's usually relegated to a parent for that reason, but she can get lucky as a Pace Chaser if there are few or no Front Runners. In Team Trials, she's generally used for Dirt due to the lack of umas for that, but she has a Medium gold. But, in Medium, she needs more Stamina so she can use her unique, and her unique will only work if she's actually winning. Just use her as a Dirt uma until you get someone better."},
+
+{stars:2,name:"Air Groove",variant:null,
+rb:[{l:"Pace Chaser",s:1},{l:"Team Trials",s:4,n:"Late / 3 Pace"},{l:"Parent",s:2}],
+desc:"Air Groove's awakenings and unique don't quite match. Her unique requires her to be 4th or worse and pass someone, which is hard for a Team Trials Pace Chaser, but she has a Pace Chaser gold. It's better to make her a Late Surger, since uniques are worth two golds. In CM, she has nothing going for her over other umas, but she does come with two End Closer debuffs. She's a low-effort option if you want to debuff End Closers."},
+
+{stars:2,name:"Mayano Top Gun",variant:null,
+rb:[{l:"Any Style",s:4},{l:"Team Trials",s:4,n:"Front/Pace"},{l:"Parent",s:1}],
+desc:"Mayano has great awakenings. Breath of Fresh Air is a consistent heal and No Stopping Me! is a strong skill on many CMs. Her aptitudes mean she can race on anything as anything, though Dirt Mile is a bit difficult. If Pace Chasers are good, she can be a Pace Chaser; if End Closers are good, she can be an End Closer. She's definitely an uma you want to invest in as a F2P player. In Team Trials, No Stopping Me! isn't consistent. Her unique is also a final corner \"blocked_side\" unique, which is difficult to achieve after the First Anniversary change.\n\nHer Shapeshifter event (win a G1 as each style) gives her a good accel for every style, but isn't added until later. She also gets Fast Learner guaranteed if she has 500+ Wit when \"Maya's Love Advice?!\" triggers, making her appealing for chasing high scores."},
+
+{stars:2,name:"Super Creek",variant:null,
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:3,n:"Long/Med Pace"},{l:"Parent",s:4}],
+desc:"Super Creek has a crazy amount of recovery in her kit. Her unique and evolved Maestro total to be nearly 3 golds worth. However, her unique is inconsistent, requiring her to be 3-4 in CM or 3-5 in Team Trials at a random point in the middle leg. If there end up being a lot of Front Runners / Pace Chasers it's difficult to trigger. After the buffs, it's a good heal when inherited, so she's sometimes used as a parent for Pace Chasers who want some safety vs debuffs. Pace Chasers often don't have good things to inherit, especially if it's not a Nishino track, so she's a good parent to have around."},
+
+{stars:3,name:"Rice Shower",variant:"Original",
+rb:[{l:"Pace Chaser",s:2},{l:"Team Trials",s:5,n:"Long"},{l:"Parent",s:2}],
+desc:"Rice is a very popular uma, but not a very good one. Her unique and golds are all consistent enough for Long Team Trials though, and since she has a built-in recovery, training her for it isn't difficult. Her bonuses can sometimes make training painful. She has Determined Descent which is good on some tracks, but the other umas with it are much better, and others can just inherit the white or get the gold from a card."},
+
+{stars:3,name:"Symboli Rudolf",variant:"Original",
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:5,n:"Med Late"},{l:"Parent",s:3},{l:"Speed Debuffer",s:0,n:"-0.25"}],
+desc:"Rudolf's evolutions mean that her unique and both golds are perfectly consistent, making her a great option for a Medium Team Trials. Though, one of those golds is Professor, which you get from the very popular Kitasan Black Speed card. If you regularly use Kitasan, she loses value and can be considered Team Trials 4 due to having a duplicated gold. Her unique is very consistent and decently strong for Late Surgers and End Closers. She can be a good parent when Dober and/or Ryan aren't good parents for the track, such as in Long Distance, or as a grandparent. As a Debuffer, Rudolf isn't desirable as she can't use her own card, which is the best card for Debuffers, so she can fill a hybrid role like Grass Wonder does. In CM she's just average, but being around Oguri's strength is still strong."},
+
+{stars:3,name:"Mejiro McQueen",variant:"Original",
+rb:[{l:"Late Surger",s:4},{l:"Team Trials",s:5,n:"Long Pace"},{l:"Parent",s:3}],
+desc:"McQueen received a bit of redemption with her evolutions, but not enough to make her generally good in CM. However, everything is consistent for Team Trials. There is a very specific strategy with McQueen as a Late Surger in CM which is fairly strong. You pair her with Urara or a similar poor performer to make her unique always trigger, and when that results in carrying speed over into the spurt, she becomes quite powerful. Her unique is also pretty good for Long, especially after it gets buffed."},
+
+{stars:3,name:"Taiki Shuttle",variant:"Original",
+rb:[{l:"Pace Chaser",s:5},{l:"Team Trials",s:3,n:"Mile Pace"},{l:"Parent",s:5}],
+desc:"Taiki's unique is very strong on certain tracks, and it gives acceleration, so she's a highly desirable parent. On tracks where she's good, her ult is paired with Nishino Flower's, taking up both parent slots. Because of this, if you don't have either of them, you should consider prioritising Taiki from daily legend races. However, her unique isn't consistent enough for Team Trials. Her golds both get better with buffs that come later, and then she becomes a strong racer in her own right, still usable today on the JP server."},
+
+{stars:3,name:"Oguri Cap",variant:"Original",
+rb:[{l:"Pace Chaser",s:3},{l:"Late Surger",s:3},{l:"End Closer",s:3},{l:"Team Trials",s:5,n:"Pace"},{l:"Parent",s:3}],
+desc:"Oguri is a great all-rounder uma. She's decently strong in basically any track, and her unique can be inherited on non-Front Runners for a consistent 0.25 speed. Using Oguri is never a bad choice. In Team Trials, everything is consistent, and you can put her anywhere you need her. Of course, that's usually Dirt, but if you have Dirt umas and lack Sprint umas, she can fill that. Her great flexibility and good strength is why she's recommended for the initial pick ticket, even though other umas are sometimes stronger. Her heal is consistent when she's a Pace Chaser and her acceleration skill can sometimes be used for gambling."},
+
+{stars:3,name:"Maruzensky",variant:"Original",
+rb:[{l:"Front Runner",s:2},{l:"Team Trials",s:5,n:"Mile Pace"},{l:"Parent",s:5}],
+desc:"Maruzensky is primarily a parent uma. For Front Runners and Pace Chasers, she's good for Osaka Hai, Oaks, Japan Derby, and Japan Cup. These are all Medium tracks, so she herself isn't very good on them, due to having Mile skills. On other final corner tracks, her unique typically triggers too early to do anything, but she can be inherited on Late Surgers/End Closers, who can pass into 5th to trigger it later and get the accel. On such tracks, Dober isn't a good inherit, so she can replace Dober as a parent. In Team Trials, she has consistent skills and a consistent unique — just don't evolve Accel Full Throttle. It requires first place when evolved, which isn't consistent even for Front Runner. Her inherited unique is also very consistent for all styles and can be inherited on anyone in Team Trials for points."},
+
+{stars:3,name:"Tokai Teio",variant:"Original",
+rb:[{l:"Pace Chaser",s:5},{l:"Team Trials",s:5,n:"Med Pace"},{l:"Parent",s:3}],
+desc:"Early on, Tokai Teio is quite weak, but the evolutions and a buff to her unique saves her. She becomes a very strong uma in Medium distance. Her winrate in competitive matchmaking rivals NY Kitasan and Christmas Oguri in some CMs. As a parent, she's a consistent 0.25 speed. She also has strong Secret Events for winning the Triple Crown and the Spring Triple Crown."},
+
+{stars:3,name:"Silence Suzuka",variant:"Original",
+rb:[{l:"Front Runner",s:5},{l:"Team Trials",s:5,n:"Mile Front"},{l:"Parent",s:2}],
+desc:"Suzuka is used for her Runaway ability, once that's introduced. In Team Trials, this means she has an extra gold skill. Concentration is also a great skill in Team Trials since it gets you more good start bonuses. In CM, she's used often, as Front Runners are frequently strong and a Runaway makes it much harder for Front Runners to win. It also serves as a way to buff your Pace Chasers. When the spurt is on the final corner, her Unrestrained skill can help her win. Her inherited unique basically only works on other Runaway and there are better options."},
+
+{stars:3,name:"Special Week",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Pace"},{l:"Parent",s:4}],
+desc:"Special Week is pretty plain. After the buff she receives, her unique has accel, but it requires you to pass someone, so it's hard to trigger early enough to be good. However, the Current Speed aspect of it means you'll always be getting a benefit. You can inherit it on backline umas. Everything is consistent for a Team Trials Pace Chaser."},
+
+{stars:3,name:"TM Opera O",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Med Pace"},{l:"Parent",s:2}],
+desc:"Early on, Opera's unique is very hard to trigger, but it gets buffed later. Opera has a heap of consistent skills for Team Trials. In CM, she can be strong when the spurt starts after the final corner starts and both of her evolutions are great. Her unique and Speed Star both trigger on the final corner. If they give her carryover, she's strong. Tracks that fit this are Tennosho Autumn and, later, Longchamp 2400m. Also keep in mind her Fall Triple Crown secret event both years, which gives all stats up and is affected by Race Bonus."},
+
+{stars:3,name:"Mihono Bourbon",variant:"Original",
+rb:[{l:"Front Runner",s:2},{l:"Team Trials",s:5,n:"Med Front"},{l:"Parent",s:3}],
+desc:"Bourbon is outclassed by many Front Runners in a CM context, but in Team Trials, her skills are pretty consistent. You'd want to get Concentration on her to improve her unique's consistency, or at least Focus. Her unique won't trigger if she has a bad start, and Concentration prevents those. Having a Medium Distance Recovery built in makes her easy to train. Her Valentine's alt is arguably the strongest generic Front Runner uma, so look forward to that if you're a Bourbon fan."},
+
+{stars:3,name:"Biwa Hayahide",variant:"Original",
+rb:[{l:"Pace Chaser",s:2},{l:"Team Trials",s:5,n:"Long Pace"},{l:"Parent",s:3}],
+desc:"Biwa's similar to Super Creek. She has an insane amount of recovery, almost three golds worth with both her evolutions, and everything is consistent for Team Trials. However, she has nothing exciting in her kit for CM except maybe carryover on her unique in Tennosho Fall."},
+
+{stars:3,name:"Mejiro McQueen",variant:"Anime",
+rb:[{l:"Front Runner",s:4},{l:"Team Trials",s:5,n:"Long Front/Pace"},{l:"Parent",s:2}],
+desc:"Bird McQueen doesn't really have anything going for her in CM, but at least she's consistent in Stadium and has a heal for Long. She's outclassed when her unique carries over and can't compete in Long CMs against the meta Pace Chasers or Fronts until her buffs which come much later. Though, after those buffs, she is quite strong."},
+
+{stars:3,name:"Tokai Teio",variant:"Anime",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:5,n:"Med Pace"},{l:"Parent",s:3}],
+desc:"Red Teio is a little better than OG Oguri, but has nothing to make her exceptional. Everything is consistent for Stadium and her unique can be inherited on Pace Chasers for 0.25 speed. Two gold recoveries in Medium means you get to skimp on Stamina quite a bit. She has the same great secret events as normal Teio."},
+
+{stars:3,name:"Curren Chan",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Sprint Pace"},{l:"Parent",s:1},{l:"Speed Debuffer",s:0,n:"-0.25"}],
+desc:"Curren is a gambler in Sprints. If her unique triggers late enough to bring the accel into the spurt, she's pretty strong. However, Sprint CMs tend to be dominated by Front Runners and End Closers, so she's not quite meta. She's probably good in Team Trials, her golds are consistent and her unique should trigger most of the time."},
+
+{stars:3,name:"Narita Taishin",variant:"Original",
+rb:[{l:"End Closer",s:5},{l:"Team Trials",s:5,n:"Mile End"},{l:"Parent",s:2}],
+desc:"Taishin is the original holder of Encroaching Shadow, one of the strongest End Closer skills. Even after other End Closers outclass her in Long, she remains meta for certain Mile tracks. However, she has a debilitating training event that lowers her mood and gives her Bad Practice that's a pain to work around sometimes. But after that, there's an event in Late March that gives her all stats."},
+
+{stars:3,name:"Smart Falcon",variant:"Original",
+rb:[{l:"Front Runner",s:5},{l:"Team Trials",s:5,n:"Dirt Front"},{l:"Parent",s:2}],
+desc:"Smart Falcon is the best Dirt uma on release, but later, is generally outclassed by Copano Rickey. Still, even after Rickey's release, she can still hold her own. There are certain tracks where her unique can get accel during the spurt. All her skills are consistent for Team Trials. You're likely to see Falcon or one of her alts in every Dirt CM forever. Her first alt is roughly the same strength as her. You could also raise her for Turf if you were particularly motivated, and she's capable at that for a while."},
+
+{stars:3,name:"Narita Brian",variant:"Original",
+rb:[{l:"Pace/Late",s:3},{l:"Team Trials",s:5,n:"Pace/Late"},{l:"Parent",s:4}],
+desc:"Brian has very plain, consistent skills. Just an average uma. After buffs, her unique is pretty strong to inherit on non-Front umas and has some tracks where it's particularly strong, like Hanshin 1600m."},
+
+{stars:3,name:"Mayano Top Gun",variant:"Wedding",
+rb:[{l:"Pace Chaser",s:3},{l:"Late/End",s:4},{l:"Team Trials",s:4,n:"Medium"},{l:"Parent",s:4},{l:"Stamina Debuffer",s:0,n:"-3%"}],
+desc:"Wedding Mayano can gamble with her unique as a backliner. If she passes at the right time, and the track's spurt starts on the final corner, she'll get a bunch of accel. She's also the second best option for a Stamina Debuffer after Nice Nature, as Mystifying Murmur is the best Stamina debuff. Though, it's not consistent in Team Trials. Sometimes, she gets built as a hybrid uma, with enough stats to win but also carrying debuffs. Seeing her win in CM even as a debuffer happens surprisingly often."},
+
+{stars:3,name:"Air Groove",variant:"Wedding",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Mile Pace"},{l:"Parent",s:2}],
+desc:"Wedding Groove is a solidly strong Leader after the first anniversary buffs. When Taiki/Nishino are viable uniques to inherit for a Mile CM, Wedding Groove is one of the best ones to take advantage of them thanks to her midleg speed unique and gold. Before her buff, she's extremely bad."},
+
+{stars:3,name:"Seiun Sky",variant:"Original",
+rb:[{l:"Front Runner",s:2},{l:"Team Trials",s:2},{l:"Parent",s:5}],
+desc:"Seiun Sky revolutionised Fronts with her unique. In basically every Medium and Mile track as well as some others, Fronts will want to use her as a parent. Even some Paces want her unique. However, she herself is very lacking. She doesn't have the skills required to keep up with the other Fronts and won't be able to use her unique. However, if Fronts are bad on a track, she can be good. In a Pace meta, Seiun is generally the only Front that can actually compete with them, as long as there aren't any other Fronts around to ruin her day."},
+
+{stars:3,name:"Hishi Amazon",variant:"Original",
+rb:[{l:"End Closer",s:1},{l:"Team Trials",s:3,n:"Mid End"},{l:"Parent",s:2}],
+desc:"Amazon's unique isn't consistent for Team Trials, but her golds are. Her first evolved skill can help her trigger her unique and could be good on some tracks like Tennosho Autumn. Storm and Stress is basically Heart and Soul so it's not very desirable. Having both End Closer Corners and Straights built in is nice. But, overall, one of the worst End Closers in the game."},
+
+{stars:3,name:"El Condor Pasa",variant:"Fantasy",
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:3,n:"Mile Late"},{l:"Parent",s:4}],
+desc:"Fantasy Pasa gets accel when trying to overtake someone on the final corner. So, when the last spurt is on the final corner, she can luck into some accel. You'll most likely want to pair her with speed skills that trigger on the final corner to trigger overtake mode, though most such skills are for Pace Chasers. Her unique can be inherited for accel purposes, but there's generally going to be better options. Both her golds are a little inconsistent in Team Trials, especially Furious Feat, but Furious Feat can be used as another gambling skill in Mile CM."},
+
+{stars:3,name:"Grass Wonder",variant:"Fantasy",
+rb:[{l:"Late Surger",s:2},{l:"Team Trials",s:5,n:"Long Late"},{l:"Parent",s:4}],
+desc:"Healer Grass is called Healer Grass because she heals. Her kit has the equivalent of more than 3 Gold heals, and with both golds being buffed on second anni, they're all good and consistent. In CM, her lack of any other tools beyond healing makes her a poor performer, and by the time there are acceleration options in Long for Lates, Sakura Laurel is released and overshadows her. Her unique is also a 0.35 heal when inherited, which is generally one of the best options for Long Lates and Ends, as they don't have access to Ryan and Dober on most Long tracks."},
+
+{stars:3,name:"Fuji Kiseki",variant:"Original",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:5,n:"Mile Pace"},{l:"Parent",s:4}],
+desc:"Fuji is basically a clone of Oguri. She has a similar unique, a Pace heal, and a gold Mile speed skill instead of a generic gold accel skill. You can use her in Mile CMs if you want. Her unique is 0.25 when inherited, making it quite good."},
+
+{stars:3,name:"Gold City",variant:"Original",
+rb:[{l:"Late Surger",s:4},{l:"Team Trials",s:5},{l:"Parent",s:2},{l:"Speed Debuffer",s:0,n:"-0.2"}],
+desc:"Gold City is a gambling uma, similar to Curren Chan. If she starts trying to overtake someone late in the middle leg, her unique will trigger and let her carry accel into the spurt. You'll want to pair her with skills that trigger around there, which vary based on the track. She can further gamble with her built-in Switch-up Pro. Her gold heal later becomes a speed debuff, but if you want a Mile speed debuffer, you'll usually just use Grass Wonder and get that gold heal from the Gold City card. Note: every race you do after Tennosho Spring on Gold City gives you all stats and extra SP, allowing much higher SP counts for Team Trials."},
+
+{stars:3,name:"Maruzensky",variant:"Summer",
+rb:[{l:"Front Runner",s:3},{l:"Team Trials",s:4,n:"Mile Front"},{l:"Parent",s:4}],
+desc:"Summer Maruzensky is the benchmark for Runner umas. She has a gold heal and a midleg speed unique. She used to be the best, but became outclassed with Valentines Bourbon's release. These days, Runners usually come with either Fortune or Groundwork, while S.Maru has neither, making her difficult to raise. Her unique is good to inherit on other Runners when there aren't two mandatory parents. In Stadium, hills in Mile aren't always there, so her gold recovery often won't trigger. Make sure you have a backup heal."},
+
+{stars:3,name:"Special Week",variant:"Summer",
+rb:[{l:"Late Surger",s:4},{l:"Team Trials",s:5,n:"Mid Late"},{l:"Parent",s:2}],
+desc:"Summer Spe has a boring kit, but it's overall decently strong. Both of her golds evolve into 4s duration ones, which is very good. Her unique is very easy to trigger and is a gold heal, making her easy to raise for Mid and Long. Inherited, it's only a white heal."},
+
+{stars:3,name:"Meisho Doto",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Mid Pace"},{l:"Parent",s:2}],
+desc:"Doto gets acceleration when she passes someone in the final leg or beyond. So, if she gets lucky, she can zoom. It's not consistent though, so she's just a gambling uma. Everything is consistent enough in Team Trials."},
+
+{stars:3,name:"Eishin Flash",variant:"Original",
+rb:[{l:"Late Surger",s:2},{l:"Team Trials",s:5,n:"Late"},{l:"Parent",s:2}],
+desc:"Eishin has been bullied by recent scenarios. In Grand Concert, you get Magician of the Lane for free, and in Grandmasters, you get Heart and Soul for free. She'll often have a duplicated gold, making her less ideal for Stadium training. For CM, she has nothing special."},
+
+{stars:3,name:"Matikanefukukitaru",variant:"Full Armor",
+rb:[{l:"Late Surger",s:4},{l:"Team Trials",s:5,n:"Long Late"},{l:"Parent",s:2}],
+desc:"Back when End Closers were the meta in Long tracks, FA Fuku had her uses. When the End Closers moved forward in mid leg, they would trigger her unique and make her run faster. Once Late Surgers are equal to or greater than End Closers in Long, this is less ideal, but she's still quite good. Her lack of heals makes her a bit hard to train for Long as well."},
+
+{stars:3,name:"Hishi Akebono",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Team Trials",s:5,n:"Sprint Pace"},{l:"Parent",s:2}],
+desc:"Akebono is a solid Sprint Pace Chaser. Her unique is a mid leg speed unique if you don't do anything special, which is pretty good. You can stack Stamina on her to make her unique trigger later and get the acceleration from it into the spurt, but it takes like 1000 Stamina with heals to do that. Generally it's not worth it, but it's a fun meme strategy."},
+
+{stars:3,name:"Agnes Digital",variant:"Original",
+rb:[{l:"Late Surger",s:5},{l:"Team Trials",s:5},{l:"Parent",s:4}],
+desc:"If Digital was on the initial ticket, she'd be the one to pick instead of Oguri. She has the flexibility to go either Turf or Dirt, is strong everywhere, and on many tracks, she's extremely strong and makes it into the top 5 of umas for that track. Her unique is best when the spurt starts before the final corner, but the final corner starts shortly after. Umas spread out on the final corner, and her unique has lane movement speed. When you're moving side to side with a lane movement speed buff active, you get +0.5 speed. So, you want her to use her unique before the spreading happens to have it active while spreading. It can also be inherited for other backlines on tracks where it works. Her Front Row gold is a good gambling skill for Dirt and everything is consistent. She's a priority pick in Daily Legend Races."},
+
+{stars:3,name:"Super Creek",variant:"Halloween",
+rb:[{l:"Pace Chaser",s:2},{l:"Team Trials",s:3},{l:"Parent",s:5},{l:"Stamina Debuffer",s:0,n:"-3%"}],
+desc:"Mummy Creek is a mandatory parent for Fronts and Paces whenever Pasa also is. However, all of those tracks are Short and Mile, which Creek has G in. So, she's not good as a racer herself. On Sprint tracks where Seiun doesn't work, Pasa and H.Creek are the mandatory parents. She can be used as a second Stamina Debuffer if you don't have Mayano Bride."},
+
+{stars:3,name:"Rice Shower",variant:"Halloween",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:4},{l:"Parent",s:2},{l:"Stamina Debuffer",s:0,n:"-3%"}],
+desc:"Halloween Rice is a bit different from usual Stamina Debuffers, who are backliners. She instead goes Pace or Front. Typically if she's being used, it's to give your Front someone to compete with while also having debuffs. Her kit is good but not special, and her debuff isn't consistent in Team Trials since someone needs to become rushed."},
+
+{stars:3,name:"Kawakami Princess",variant:"Original",
+rb:[{l:"Late Surger",s:3},{l:"Team Trials",s:3},{l:"Parent",s:2}],
+desc:"Aside from coming with No Stopping Me, Kawakami doesn't have anything special. She's basically a less flexible Mayano Top Gun. NSM is also not consistent enough for Team Trials and Rising Dragon isn't fully consistent either. But, an uma with NSM will always have a chance to win."},
+
+{stars:3,name:"Manhattan Cafe",variant:"Original",
+rb:[{l:"End Closer",s:4},{l:"Team Trials",s:5,n:"Long Late"},{l:"Parent",s:2},{l:"Stamina Debuffer",s:0,n:"-1%"}],
+desc:"Cafe is basically an upgrade to Gold Ship. She has a mid leg speed unique and a gold heal. She used to go Chaser, but once the Kris S card exists, she goes Betweener and gets to actually use her heal. There's a slight concern that her unique will make her run too far forward to trigger Lose Yourself. She's also incredibly difficult to train due to her aptitudes and 30% Stamina bonus. Her unique can be inherited on Debuffers for an extremely minor speed debuff."},
+
+{stars:3,name:"Gold City",variant:"Autumn Festival",
+rb:[{l:"Late Surger",s:2},{l:"Team Trials",s:3},{l:"Parent",s:2},{l:"Accel Debuffer",s:0,n:"-0.3"}],
+desc:'Fes City is the only acceleration debuffer in the game currently, but doesn\'t come into relevance until the Gold Ship Summer alt. Outside of Mile, you can 564 her debuff and sometimes hit people as they\'re entering spurt, causing a massive decrease in their speed. This is extremely potent, but doesn\'t work every race. Her unique is a final corner "blocked_side" unique, which is very difficult to trigger after the first anni change. Every race after Tennosho Haru on Gold City gives you all stats and extra SP, allowing SP counts above 5000.'},
+
+{stars:3,name:"Symboli Rudolf",variant:"Autumn Festival",
+rb:[{l:"Pace Chaser",s:2},{l:"Team Trials",s:2},{l:"Parent",s:2}],
+desc:"(Written after 2nd anni changes) Fes Rudolf is just not very good. The gold green she has already gives speed as a white and it's very inconsistent in Stadium, while her unique is a speed unique that triggers during or after final leg, which is not what you want. She actually used to be better before the 2nd anni changes, which added the phase>=2 condition to her unique."},
+
+{stars:3,name:"Tosen Jordan",variant:"Original",
+rb:[{l:"Pace Chaser",s:4},{l:"Late Surger",s:4},{l:"Team Trials",s:5},{l:"Parent",s:2}],
+desc:"Without evolutions, Tosen Jordan is terrible. With them, she's great. She's not top tier, but she gets a consistent gambling accel and a gold heal, both of which work either as Pace Chaser or Late Surger. You can use her anywhere you're willing to raise her aptitudes for."},
+
+{stars:3,name:"Mejiro Dober",variant:"Original",
+rb:[{l:"Late Surger",s:4},{l:"Team Trials",s:1},{l:"Parent",s:5},{l:"Stamina Debuffer",s:0,n:"-3%"}],
+desc:"Dober's unique is mandatory on Late Surgers and End Closers on many tracks. Ryan's requires 6th, while Dober's requires 5th or 6th, making it much more consistent. She herself can be used as either a gambler or a Stamina Debuffer with a chance to win. Her evolved debuff gives her Current Speed which is quite potent if it triggers early, but she has to be 6th or below to trigger it, so it's not consistent. Her gold green is good for her signature track, Queen Elizabeth Cup. None of her kit is consistent for Team Trials."},
+
+{stars:3,name:"Biwa Hayahide",variant:"Christmas",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:4,n:"Long Pace"},{l:"Parent",s:2}],
+desc:"Christmas Biwa is just an average uma with nothing special about her. In CM she won't be able to compete against the meta frontliners in Long. Outside of Long, she has even less going for her, losing her gold recovery. If you're a Biwa fan, she does get another alt later."},
+
+{stars:3,name:"Oguri Cap",variant:"Christmas",
+rb:[{l:"Front Runner",s:4},{l:"Pace Chaser",s:5},{l:"Late Surger",s:5},{l:"End Closer",s:5},{l:"Team Trials",s:5},{l:"Parent",s:4}],
+desc:"Where to even begin with XOguri? She's by far the strongest uma in the game currently. On 2000-2200m tracks, she can trigger her unique off of 777 to get speed carryover and accel as any style. On tracks with a downhill near spurt, she can be an End Closer with downhill recovery. On tracks with an uphill near spurt, she can be a Front Runner and use uphill recovery. Even without a good trigger, she can pick 3 phase_random==1 recoveries and gamble. She's basically immune to stamina debuffs. Even V.Bourbon sometimes inherits her unique.\n\nPerfectly consistent recoveries (golds only): All: Burning Spirit STA, Triple 7s, Maestro, Breath of Fresh Air | Front: Restless | Pace: Gourmand, Race Planner | End Closer: After School Specialist | Medium: Miraculous Step | Long: Cooldown, McQueen Wit skill.\n\nYou only want 3 recoveries in CM (4 if Tachyon's unique is similar to 777). Avoid non-listed recoveries to maximise consistency. In Team Trials you can get as many recoveries as you can afford."},
+
+{stars:3,name:"Fine Motion",variant:"Original",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:4,n:"Mile Pace"},{l:"Parent",s:2}],
+desc:"Fine Motion has a mid leg speed unique, which is somewhat rare on Leaders. Her Straight Down Resolution evolution gets additional accel, making her great on hills where the spurt coincides with a downhill. She's also one of the best umas for taking advantage of Taiki and Nishino uniques, with her unique allowing her to stay in front of the other Leaders. In Team Trials, hill skills aren't consistent."},
+
+{stars:3,name:"Tamamo Cross",variant:"Original",
+rb:[{l:"End/Late",s:4},{l:"Team Trials",s:5,n:"Mid Late"},{l:"Parent",s:2}],
+desc:"Tamamo's unique has carry-over on Tennosho Haru, which makes her quite strong on the track. However, it requires you to be 6th or 7th (or 2nd or 3rd), which is pretty strict. Whether she's better as a Surger or End Closer will depend on the meta, but probably End Closer. Her speed skills are quite strong and will push her forwards, making it difficult to be in position as a Late Surger, and the position requirement on her unique doesn't line up with where Late Surgers usually want to be."},
+
+{stars:3,name:"Haru Urara",variant:"New Years",
+rb:[{l:"End Closer",s:4},{l:"Team Trials",s:5,n:"Dirt Late"},{l:"Parent",s:1}],
+desc:"NY Urara is perfectly serviceable as an End Closer in Dirt CMs, though largely due to there not being many options in Dirt CMs. Both of her golds are useless in CM, but consistent in Team Trials as a Betweener. Her unique gets stronger the further the distance between her and 1st is, so being a Chaser is preferred in CM. You could pair her with a Runaway to try to strengthen it more. Twin Turbo has Dirt F."},
+
+{stars:3,name:"TM Opera O",variant:"New Years",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:5,n:"Long Pace"},{l:"Parent",s:3}],
+desc:"NY Opera has a very consistent unique that can be inherited on basically anyone in Medium and Long for 0.25 speed. It's stronger than OG Oguri's in these cases, as it doesn't waste duration. As a racer, she has nothing special, on a similar level to OG Oguri in Long. Keep in mind her Fall Triple Crown secret event both years, which gives all stats up and can overlap with the Grandmasters yearly race with a red buff and give a ton of stats."},
+
+{stars:3,name:"Sakura Chiyono O",variant:"Original",
+rb:[{l:"Pace Chaser",s:3},{l:"Team Trials",s:4},{l:"Parent",s:2}],
+desc:"Chiyono is another Oguri clone. Distance-based speed skill that triggers near the end. Her Spring gold isn't great and Speed Star isn't exciting when many umas have it. She's just average. (But, haha wolf girl.)"},
+
+{stars:3,name:"Eishin Flash",variant:"Valentines",
+rb:[{l:"Betweener",s:3},{l:"Team Trials",s:5},{l:"Parent",s:2},{l:"Speed Debuffer",s:0,n:"-0.25"}],
+desc:"Valentines Eishin doesn't have much interesting going for her. She can gamble with Winning Recipe and it's consistent in Stadium. She can be used as a Speed Debuffer. Final Straight speed uniques aren't ever outstanding. Roughly on the same level as OG Grass Wonder."},
+
+{stars:3,name:"Mihono Bourbon",variant:"Valentines",
+rb:[{l:"Front Runner",s:5},{l:"Team Trials",s:5},{l:"Parent",s:4}],
+desc:"V.Bourbon redefined what a Runner needs to be good. With a midleg unique and midleg gold, as well as built-in Groundwork, one green, and Concentration, as well as getting Frontrunner from her training scenario, she's extremely easy to train. This ease allows people to get more good runs with her, raising her ceiling. Her unique is also pretty good to inherit. Runners rarely have a second good unique to inherit after Seiun, and a midleg unique is always welcome. Plus, since she's good on so many tracks, it's easy to find her as a parent. Concentration is also great to have for Stadium."},
+
+{stars:99,name:"Matikanetannhauser",variant:"2★",
+rb:[{l:"Leader",s:3},{l:"Team Trials",s:4,n:"Long"},{l:"Parent",s:1}],
+desc:"It's hard to measure the consistency of Tannhauser's gold heal, but her other gold and her unique are consistent. You can run her as a Betweener if the track is Chaser-heavy. She's a fine F2P option for Long CMs and easy to train for Stadium, but doesn't have anything exciting in her kit."},
+
+{stars:99,name:"Mejiro Ardan",variant:"Original",
+rb:[{l:"Leader",s:3},{l:"Team Trials",s:5,n:"Mid Leader"},{l:"Parent",s:2}],
+desc:"Ardan is basically an Oguri clone. Final Straight speed unique, gold heal for Leaders. Prepared to Die is an uninteresting gold, since it triggers during the spurt. Her unique, though 0.45, only has 4s duration and comes with Stamina drain, so it's generally not recommended as an inherit."},
+
+{stars:99,name:"Admire Vega",variant:"Original",
+rb:[{l:"Chaser",s:2},{l:"Team Trials",s:4,n:"Mid Chaser"},{l:"Parent",s:2}],
+desc:"Admire Vega is not very good. Her unique gets stronger if she's in the bottom 20% of umas during the final straight, but if she's that far behind, she's already losing horribly. Her gold heal should be consistent. Storm and Stress is a boring last spurt speed skill and not quite consistent in Stadium."},
+
+{stars:99,name:"Kitasan Black",variant:"Original",
+rb:[{l:"Front Runner",s:5},{l:"Team Trials",s:5,n:"Long Front"},{l:"Parent",s:5}],
+desc:"Kitasan revived Runners in Long Distance. Seiun unique doesn't work on Long, so Runners suffered there. Kitasan's unique activates instantly like Seiun's, but on Long. She's also strong in her own right, with a 0.5 accel Fortune. Her unique even triggers from second. Her biggest disadvantage is her lack of heals and inability to use her own card, so her decks usually end up being like Maruzensky + Mayano speeds. She can inherit Ball Seiun's unique for more accel."},
+
+{stars:99,name:"Satono Diamond",variant:"Original",
+rb:[{l:"Betweener",s:4},{l:"Team Trials",s:4},{l:"Parent",s:3}],
+desc:"Dia's a solid Betweener. Her gold gives her more Speed and Power on Clockwise tracks. The addition of a second evolve option for her gold heal to turn it into an equivalent opening leg gold speed skill is currently what sets her apart from other betweeners. She'll provide consistent performance with opening and final leg covered by her awakenings and unique so it's mostly a matter of building out her mid leg."},
+
+{stars:99,name:"Mejiro Bright",variant:"Original",
+rb:[{l:"Betweener",s:4},{l:"Team Trials",s:5,n:"Long Betweener"},{l:"Parent",s:1}],
+desc:"Bright's unique scales based on how much Stamina she has. At max effect, it lasts for 20 seconds. Skill durations get multiplied based on the track length, so on something like Tennosho Haru, her unique will last a fearsome 64 seconds, but that's hard to achieve. More realistic is 15s going to 48s. Her built-in golds already heal 17% so if you have over 1000 Stamina on 3200m you'll reach this. Debuffers can mess with her a bit. Just hope she doesn't go too far forward to use Kris S gold."}
+];
+
+const LV=[
+  {n:"Agnes Tachyon",s:"Med. | Pace",v:[4,"2 (Late)",4,5]},
+  {n:"Air Groove",s:"Sprint | Late",v:[4,"2 (Pace)",4,4]},
+  {n:"Air Groove [Wedding]",s:"Mile | Pace",v:[4,4,3,4]},
+  {n:"Biwa Hayahide",s:"Long/Med. | Pace",v:[1,4,3,"5 (Long)"]},
+  {n:"Curren Chan",s:"Sprint | Pace",v:[3,4,4,"2 (Front)"]},
+  {n:"Daiwa Scarlet",s:"Mile | Front",v:["2 (Pace)","2 (Med.)","2 (Pace)","2 (Pace)"]},
+  {n:"El Condor Pasa",s:"Mile/Dirt | Pace",v:[3,"2 (Med.)","2 (Med.)",3]},
+  {n:"El Condor Pasa [Fantasy]",s:"Mile/Dirt | Late",v:[4,3,4,4]},
+  {n:"Fuji Kiseki",s:"Mile | Pace",v:[4,4,4,5]},
+  {n:"Gold City",s:"Mile | Late",v:[4,5,4,4]},
+  {n:"Gold Ship",s:"Long | End",v:[4,4,4,5]},
+  {n:"Grass Wonder",s:"Mile/Med. | Late",v:[4,3,4,4]},
+  {n:"Grass Wonder [Fantasy]",s:"Long | Late",v:[2,5,4,1]},
+  {n:"Haru Urara",s:"Dirt | Late/End",v:[1,1,"1?/3?",1]},
+  {n:"Hishi Amazon",s:"Mile/Sprint/Med. | End",v:[4,1,4,1]},
+  {n:"King Halo",s:"Sprint | Late/End",v:["2 (Med.)","4 (End)","2 (Mile)","4 (Late)"]},
+  {n:"Maruzensky",s:"Mile/Dirt | Front",v:[2,4,4,2]},
+  {n:"Maruzensky [Summer]",s:"Mile/Med. | Front",v:[4,5,3,3]},
+  {n:"Matikanefukukitaru",s:"Long | Late",v:[4,4,2,1]},
+  {n:"Mayano Top Gun",s:"Long/Med. | Front",v:[3,5,4,3]},
+  {n:"Mayano Top Gun [Wedding]",s:"Med. | Non-Front",v:[4,4,4,5]},
+  {n:"Meisho Doto",s:"Med. | Late",v:[2,2,4,3]},
+  {n:"Mejiro McQueen",s:"Long/Med. | Front",v:[3,1,"2 (Pace)","2 (5 Pace)"]},
+  {n:"Mejiro McQueen [Anime]",s:"Long | Front",v:[1,5,2,4]},
+  {n:"Mejiro Ryan",s:"Med. | Late",v:[1,2,4,4]},
+  {n:"Mihono Bourbon",s:"Med./Long | Front",v:[4,4,4,4]},
+  {n:"Narita Brian",s:"Med./Long | Late/Pace",v:[4,4,2,5]},
+  {n:"Narita Taishin",s:"Med. | End",v:[4,5,4,4]},
+  {n:"Nice Nature",s:"Med. | Late",v:[4,4,4,5]},
+  {n:"Oguri Cap",s:"Dirt/Mile | Late",v:[1,"2 (5 Pace)",3,4]},
+  {n:"Rice Shower",s:"Long/Med. | Pace",v:[4,4,4,"5 (Long)"]},
+  {n:"Sakura Bakushin O",s:"Sprint | Front",v:[1,4,"2 (Pace)",1]},
+  {n:"Seiun Sky",s:"Med./Mile | Front",v:[4,1,3,3]},
+  {n:"Silence Suzuka",s:"Mile/Med. | Front",v:[1,5,4,3]},
+  {n:"Smart Falcon",s:"Dirt | Front",v:[1,"4 (but bad)",1,3]},
+  {n:"Special Week",s:"Long/Med. | Pace",v:[1,5,"2 (Late)",5]},
+  {n:"Special Week [Summer]",s:"Long/Med. | Late",v:[3,4,4,4]},
+  {n:"Super Creek",s:"Med./Long | Pace",v:[3,4,4,5]},
+  {n:"Symboli Rudolf",s:"Med./Long | Late/End",v:[3,3,2,4]},
+  {n:"TM Opera O",s:"Med./Long | Pace",v:[4,4,4,4]},
+  {n:"Taiki Shuttle",s:"Dirt/Mile | Pace",v:["2 (Front)",4,4,"2 (Front)"]},
+  {n:"Tokai Teio",s:"Med. | Pace",v:[4,"2 (Pace)",4,3]},
+  {n:"Tokai Teio [Anime]",s:"Med. | Pace",v:[1,5,4,5]},
+  {n:"Vodka",s:"Mile | Late/Pace",v:[4,5,4,"4 (Late)"]},
+  {n:"Winning Ticket",s:"Med. | Late",v:[4,4,4,4]}
+];
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function sc(v){const n=parseInt(v);return n>=1&&n<=5?"s"+n:""}
+function starsInfo(s){
+  if(s===1)return{t:"1★",c:"r1"};
+  if(s===2)return{t:"2★",c:"r2"};
+  if(s===3)return{t:"3★",c:"r3"};
+  return{t:"New",c:"rcurr"};
+}
+
+function renderUmas(){
+  const secs=[
+    {lbl:"1★ Umas",cls:"r1",key:1},
+    {lbl:"2★ Umas",cls:"r2",key:2},
+    {lbl:"3★ Umas",cls:"r3",key:3},
+    {lbl:"Current / Latest",cls:"rcurr",key:99}
+  ];
+  let h="";
+  secs.forEach(sec=>{
+    const group=UMAS.filter(u=>u.stars===sec.key);
+    if(!group.length)return;
+    h+=`<div class="section-title ${sec.cls}" data-sec="${sec.key}">${sec.lbl}</div>`;
+    group.forEach((u,i)=>{
+      const si=starsInfo(u.stars);
+      const vbadge=u.variant?`<span class="rb" style="background:rgba(167,139,250,.12);color:#a78bfa;margin-left:4px">${esc(u.variant)}</span>`:"";
+      const rbadges=u.rb.map(b=>{
+        const bc=b.s===0?"rdeb":"s"+Math.min(5,Math.max(1,b.s));
+        const lbl=b.s===0?`${b.l}${b.n?" "+b.n:""}`:`${b.l} ${b.s}${b.n?" ("+b.n+")":""}`;
+        return`<span class="rb ${bc}">${esc(lbl)}</span>`;
+      }).join("");
+      const id=`c${sec.key}_${i}`;
+      const paras=u.desc.split("\n").filter(p=>p.trim()).map(p=>`<p>${esc(p.trim())}</p>`).join("");
+      const umaIdx=UMAS.indexOf(u);
+      h+=`<div class="card" id="${id}" data-idx="${umaIdx}" data-sec="${sec.key}"><div class="card-head" onclick="tog('${id}')"><div class="card-name-area"><div class="card-name">${esc(u.name)}${vbadge}</div><div class="card-meta"><span class="rb ${si.c}">${si.t}</span>${rbadges}</div><div class="coll-btns"><button class="cbtn have" onclick="event.stopPropagation();tgState(${umaIdx},'have')">✓ Have</button><button class="cbtn want" onclick="event.stopPropagation();tgState(${umaIdx},'want')">★ Want</button></div></div><span class="chevron">▼</span></div><div class="card-body"><div class="desc">${paras}</div></div></div>`;
+    });
+  });
+  document.getElementById("umaList").innerHTML=h;
+}
+
+function renderLv(){
+  let h=`<thead><tr><th>Uma (Dist. | Style)</th><th>Lv 2</th><th>Lv 3</th><th>Lv 4</th><th>Lv 5</th></tr></thead><tbody>`;
+  LV.forEach(r=>{
+    h+=`<tr><td><div style="font-weight:600;color:#e8eaf4">${esc(r.n)}</div><div class="uma-sub">${esc(r.s)}</div></td>`;
+    r.v.forEach(v=>{const c=sc(v);h+=`<td><span class="lv ${c}">${esc(v)}</span></td>`;});
+    h+="</tr>";
+  });
+  h+="</tbody>";
+  document.getElementById("lvTable").innerHTML=h;
+}
+
+function tog(id){document.getElementById(id).classList.toggle("open")}
+
+function getKey(u){return"uma_"+u.name+"_"+(u.variant||"")}
+function tgState(idx,st){
+  const u=UMAS[idx];
+  const k=getKey(u);
+  const cur=localStorage.getItem(k)||"none";
+  const next=cur===st?"none":st;
+  localStorage.setItem(k,next);
+  const card=document.querySelector(`.card[data-idx="${idx}"]`);
+  if(card){
+    card.dataset.state=next;
+    card.querySelectorAll(".cbtn").forEach(b=>b.classList.remove("active"));
+    if(next!=="none") card.querySelector(".cbtn."+next)?.classList.add("active");
+  }
+  filterUmas();
+}
+function loadStates(){
+  document.querySelectorAll(".card[data-idx]").forEach(card=>{
+    const u=UMAS[parseInt(card.dataset.idx)];
+    const st=localStorage.getItem(getKey(u))||"none";
+    card.dataset.state=st;
+    if(st!=="none") card.querySelector(".cbtn."+st)?.classList.add("active");
+  });
+}
+function setCollFilter(btn,f){
+  document.querySelectorAll(".cfbtn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  filterUmas();
+}
+function filterUmas(){
+  const raw=document.getElementById("umaSearch").value.trim().toLowerCase();
+  const cf=(document.querySelector(".cfbtn.active")||{dataset:{filter:"all"}}).dataset.filter;
+  const m=raw.match(/^(.+?)\s+(\d)$/);
+  const textQ=m?m[1].trim():raw;
+  const numQ=m?parseInt(m[2]):null;
+  let anyVisible=false;
+  document.querySelectorAll(".card").forEach(c=>{
+    const uma=UMAS[parseInt(c.dataset.idx)];
+    let textOk=!raw;
+    if(raw){
+      for(const b of uma.rb){
+        if(b.l.toLowerCase().includes(textQ)){
+          if(numQ===null||b.s===numQ){textOk=true;break;}
+        }
+      }
+      if(!textOk&&numQ===null){
+        if(uma.name.toLowerCase().includes(textQ)) textOk=true;
+        if(uma.variant&&uma.variant.toLowerCase().includes(textQ)) textOk=true;
+      }
+    }
+    const state=c.dataset.state||"none";
+    const collOk=cf==="all"||(cf==="have"&&state==="have")||(cf==="want"&&state==="want");
+    const vis=textOk&&collOk;
+    c.style.display=vis?"":"none";
+    if(vis) anyVisible=true;
+  });
+  document.querySelectorAll(".section-title[data-sec]").forEach(hdr=>{
+    const key=hdr.dataset.sec;
+    const has=Array.from(document.querySelectorAll(`.card[data-sec="${key}"]`)).some(c=>c.style.display!=="none");
+    hdr.style.display=has?"":"none";
+  });
+  document.getElementById("noResults").style.display=(!anyVisible&&(raw||cf!=="all"))?"block":"none";
+}
+function setTab(btn,t){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  document.getElementById(t).classList.add("active");
+  btn.classList.add("active");
+}
+
+renderUmas();
+loadStates();
+renderLv();
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
